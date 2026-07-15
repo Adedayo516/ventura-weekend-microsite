@@ -1,5 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { createRoot } from "react-dom/client";
+const { useEffect, useMemo, useState } = React;
 
 const links = {
   train: "https://www.pacificsurfliner.com/plan-your-trip/schedules/",
@@ -429,4 +428,4 @@ function BookingItem({ number, title, text, href }) {
   );
 }
 
-createRoot(document.getElementById("root")).render(<App />);
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
