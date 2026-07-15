@@ -1,6 +1,6 @@
 import { readFileSync, statSync } from "node:fs";
 
-const requiredFiles = ["index.html", "src/App.jsx", "src/styles.css", "README.md"];
+const requiredFiles = ["index.html", "src/App.jsx", "src/App.compiled.js", "src/styles.css", "README.md"];
 const requiredText = [
   "Ventura & Channel Islands Weekend",
   "confirm before booking",
@@ -19,10 +19,19 @@ for (const file of requiredFiles) {
 
 const app = readFileSync("src/App.jsx", "utf8");
 const html = readFileSync("index.html", "utf8");
+const compiled = readFileSync("src/App.compiled.js", "utf8");
 for (const text of requiredText) {
-  if (!app.includes(text) && !html.includes(text)) {
+  if (!app.includes(text) && !html.includes(text) && !compiled.includes(text)) {
     throw new Error(`Missing required text: ${text}`);
   }
+}
+
+if (html.includes("text/babel") || html.includes("@babel/standalone")) {
+  throw new Error("Production HTML must load precompiled JavaScript, not runtime Babel.");
+}
+
+if (!compiled.includes("ReactDOM.createRoot") || compiled.includes("<App />")) {
+  throw new Error("Compiled app bundle does not look browser-ready.");
 }
 
 const css = readFileSync("src/styles.css", "utf8");
